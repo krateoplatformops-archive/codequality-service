@@ -6,20 +6,26 @@ const icon = (metric) => {
       return 'fa-solid fa-bug'
     case 'code_smells':
       return 'fa-solid fa-code'
-    case 'security_review_rating':
-    case 'security_hotspots_reviewed':
     case 'security_rating':
       return 'fa-solid fa-shield'
     case 'vulnerabilities':
       return 'fa-solid fa-explosion'
-    case 'duplicated_lines_density':
-      return 'fa-solid fa-copy'
     case 'reliability_rating':
       return 'fa-solid fa-cogs'
     case 'alert_status':
       return 'fa-solid fa-exclamation-triangle'
-    case 'sqale_rating':
+    case 'coverage':
       return 'fa-solid fa-chart-line'
+    case 'comment_lines':
+      return 'fa-solid fa-comment'
+    case 'duplicated_files':
+      return 'fa-solid fa-copy'
+    case 'files':
+      return 'fa-solid fa-file'
+    case 'directories':
+      return 'fa-solid fa-folder'
+    case 'lines':
+      return 'fa-solid fa-code'
     default:
       return 'fa-solid fa-question-circle'
   }
@@ -33,33 +39,46 @@ const color = (metric, value) => {
     case 'vulnerabilities':
       if (parseInt(value) === 0) return 'Green'
       return 'Red'
-    case 'duplicated_lines_density':
-      let v = parseFloat(value)
-      if (v < 10) return 'Green'
-      if (v < 20) return 'Yellow'
-      if (v < 30) return 'Orange'
-      return 'Red'
     case 'alert_status':
       if (value === 'OK') return 'Green'
       return 'Red'
+    case 'code_smells':
+      if (parseInt(value) === 0) return 'Green'
+      return 'Orange'
     case 'reliability_rating':
-      const rr = parseFloat(value)
-      if (rr === 1) return 'Green'
-      if (rr === 2) return 'Yellow'
-      if (rr === 3) return 'Orange'
+    case 'security_rating':
+      if (parseInt(value) <= 1) return 'Green'
       return 'Red'
+    case 'coverage':
+      if (parseInt(value) > 50) return 'Green'
+      if (parseInt(value) > 30) return 'Orange'
+      return 'Red'
+    case 'duplicated_files':
+      if (parseInt(value) === 0) return 'Green'
+      return 'Red'
+    case 'comment_lines':
+    case 'files':
+    case 'directories':
+    case 'lines':
+      return 'Green'
     default:
       return 'Unknown'
   }
 }
 
+const l = ['A', 'B', 'C', 'D', 'E']
 const value = (metric, value) => {
   switch (metric) {
     case 'reliability_rating':
-      const l = ['A', 'B', 'C', 'D', 'E']
+    case 'security_rating':
       const index = parseInt(value) - 1
       if (l[index]) return l[index]
       return l[l.length - 1]
+    case 'comment_lines':
+    case 'files':
+    case 'directories':
+    case 'lines':
+      return value.toString().replace(/\B(?!\.\d*)(?=(\d{3})+(?!\d))/g, ' ')
     default:
       return value
   }

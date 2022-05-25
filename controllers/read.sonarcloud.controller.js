@@ -20,33 +20,34 @@ router.get('/:endpoint/:key', async (req, res, next) => {
     }
 
     const metrics = [
-      'alert_status',
-      'bugs',
-      'reliability_rating',
-      'vulnerabilities',
-      'security_rating',
-      'security_hotspots_reviewed',
-      'security_review_rating',
-      'code_smells',
-      'sqale_rating',
-      'coverage',
-      'duplicated_lines_density'
+      { name: 'alert_status', category: 'alerts' },
+      { name: 'bugs', category: 'alerts' },
+      { name: 'reliability_rating', category: 'alerts' },
+      { name: 'vulnerabilities', category: 'alerts' },
+      { name: 'security_rating', category: 'alerts' },
+      { name: 'code_smells', category: 'alerts' },
+      { name: 'coverage', category: 'alerts' },
+      { name: 'comment_lines', category: 'stats' },
+      { name: 'directories', category: 'stats' },
+      { name: 'duplicated_files', category: 'stats' },
+      { name: 'files', category: 'stats' },
+      { name: 'lines', category: 'stats' }
     ]
 
     const apis = [
-      {
-        url: `qualitygates/project_status?projectKey=${projectKey}`,
-        key: 'project'
-      },
+      // {
+      //   url: `qualitygates/project_status?projectKey=${projectKey}`,
+      //   key: 'project'
+      // },
       {
         url: `components/show?component=${projectKey}`,
         key: 'component',
         prop: 'component'
       },
       {
-        url: `measures/component?component=${projectKey}&metricKeys=${metrics.join(
-          ','
-        )}`,
+        url: `measures/component?component=${projectKey}&metricKeys=${metrics
+          .map((x) => x.name)
+          .join(',')}`,
         key: 'metrics',
         prop: 'component'
       }
@@ -72,9 +73,13 @@ router.get('/:endpoint/:key', async (req, res, next) => {
         label: v.metric.replace(/[_]/gm, ' '),
         value: metricHelpers.value(v.metric, v.value),
         color: metricHelpers.color(v.metric, v.value),
-        icon: metricHelpers.icon(v.metric)
+        icon: metricHelpers.icon(v.metric),
+        category: metrics.find((x) => x.name === v.metric).category
       }
     })
+
+    const parsed = uriHelpers.parse(endpoint.target)
+    response.link = `${parsed.schema}://${parsed.domain}/project/overview?id=${projectKey}`
 
     res.status(200).json(response)
   } catch (error) {
