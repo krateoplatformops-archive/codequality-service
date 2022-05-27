@@ -1,6 +1,6 @@
 apiVersion: v2
-name: sonarcloud-service
-description: Krateo PlatformOps Sonarcloud Service
+name: codequality-service
+description: Krateo PlatformOps Code Quality Service
 type: application
 icon: "https://github.com/krateoplatformops/community/blob/main/logos/black/icon.svg"
 

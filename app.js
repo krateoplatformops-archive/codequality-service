@@ -18,10 +18,10 @@ app.use(callLoggerMiddleware)
 
 /* Routes */
 const statusRoutes = require('./routes/status.routes')
-const sonarcloudRoutes = require('./routes/sonarcloud.routes')
+const codequalityRoutes = require('./routes/codequality.routes')
 
 app.use('/', statusRoutes)
-app.use('/', sonarcloudRoutes)
+app.use('/', codequalityRoutes)
 
 app.use(errorLoggerMiddleware)
 

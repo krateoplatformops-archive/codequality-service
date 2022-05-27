@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/krateoplatformops/sonarcloud-service
+  repository: ghcr.io/krateoplatformops/codequality-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -75,7 +75,7 @@ ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: kong
-  host: sonarcloud.krateo.site
+  host: codequality.krateo.site
   tls:
     enabled: false
     secret:

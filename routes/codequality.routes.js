@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const readController = require('../controllers/read.sonarcloud.controller')
+const readController = require('../controllers/read.codequality.controller')
 
 router.use('/', readController)
 
