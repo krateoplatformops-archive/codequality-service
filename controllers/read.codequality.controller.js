@@ -5,19 +5,29 @@ const stringHelpers = require('../helpers/string.helpers')
 const { logger } = require('../helpers/logger.helpers')
 const axios = require('axios')
 const metricHelpers = require('../helpers/metric.helpers')
+const secretHelpers = require('../helpers/secret.helpers')
 
-router.get('/:endpoint/:key', async (req, res, next) => {
+router.get('/:endpointName/:key', async (req, res, next) => {
   try {
-    const endpoint = JSON.parse(stringHelpers.b64toAscii(req.params.endpoint))
-    const projectKey = stringHelpers.b64toAscii(req.params.key)
+    const endpointName = req.params.endpointName
+    const projectKey = req.params.key
 
+    logger.debug(endpointName)
+    logger.debug(projectKey)
+
+    // get endpoint
+    const endpoint = await secretHelpers.getEndpoint(endpointName)
     logger.debug(endpoint)
 
-    const token = endpoint.secret.find((x) => x.key === 'token')
+    if (!endpoint) {
+      return res.status(404).send({ message: 'Endpoint not found' })
+    }
+
+    const token = endpoint.data.find((x) => x.key === 'token')
 
     let response = null
 
-    switch (endpoint?.type) {
+    switch (endpoint?.metadata.type) {
       case 'sonarcloud':
         const headers = {
           Authorization: `Basic ${stringHelpers.to64(token.val + ':')}`
