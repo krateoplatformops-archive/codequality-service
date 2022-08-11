@@ -1,8 +1,13 @@
 const axios = require('axios')
 const { envConstants } = require('../constants')
+const uriHelpers = require('./uri.helpers')
+const { logger } = require('./logger.helpers')
 
 const getEndpoint = async (name) => {
-  return (await axios.get(`${envConstants.SECRET_URI}/endpoint/${name}`)).data
+  const url = uriHelpers.concatUrl([envConstants.SECRET_URI, 'endpoint', name])
+  logger.info(url)
+
+  return (await axios.get(url)).data
 }
 
 module.exports = {
