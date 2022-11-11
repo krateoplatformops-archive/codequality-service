@@ -1,11 +1,12 @@
+/* eslint-disable no-case-declarations */
 const express = require('express')
 const router = express.Router()
-const uriHelpers = require('../helpers/uri.helpers')
-const stringHelpers = require('../helpers/string.helpers')
-const { logger } = require('../helpers/logger.helpers')
+const uriHelpers = require('../service-library/helpers/uri.helpers')
+const stringHelpers = require('../service-library/helpers/string.helpers')
+const logger = require('../service-library/helpers/logger.helpers')
 const axios = require('axios')
 const metricHelpers = require('../helpers/metric.helpers')
-const secretHelpers = require('../helpers/secret.helpers')
+const secretHelpers = require('../service-library/helpers/secret.helpers')
 
 router.get('/:endpointName/:key', async (req, res, next) => {
   try {
@@ -23,14 +24,14 @@ router.get('/:endpointName/:key', async (req, res, next) => {
       return res.status(404).send({ message: 'Endpoint not found' })
     }
 
-    const token = endpoint.data.find((x) => x.key === 'token')
-
     let response = null
 
     switch (endpoint?.metadata.type) {
       case 'sonarcloud':
         const headers = {
-          Authorization: `Basic ${stringHelpers.to64(token.val + ':')}`
+          Authorization: `Basic ${stringHelpers.to64(
+            endpoint.data.token + ':'
+          )}`
         }
 
         const metrics = [

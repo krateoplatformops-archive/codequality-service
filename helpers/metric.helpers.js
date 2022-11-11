@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 const icon = (metric) => {
   switch (metric) {
     case 'bugs':
