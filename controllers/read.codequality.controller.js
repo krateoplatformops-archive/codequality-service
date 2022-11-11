@@ -66,7 +66,7 @@ router.get('/:endpointName/:key', async (req, res, next) => {
         const content = await Promise.all(
           apis.map(async (v) => {
             const call = await axios.get(
-              uriHelpers.concatUrl([endpoint.target, v.url]),
+              uriHelpers.concatUrl([endpoint.data.target, v.url]),
               {
                 headers
               }
